@@ -43,5 +43,5 @@ jobs:
           pull: true
           push: true
           tags: |
-            jayvirrathi/nodejs-docker-kubernetes/nodejs:latest
-            jayvirrathi/nodejs-docker-kubernetes/nodejs:v1.0.0
+            nodejs-docker-kubernetes/nodejs:latest
+            nodejs-docker-kubernetes/nodejs:v1.0.0
