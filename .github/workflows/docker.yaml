@@ -1,21 +1,27 @@
-name: Docker Build
-
-on: [push]
-
+name: Publish Docker image
+on:
+    push:
+        branches:
+          - master
 jobs:
-  build:
+  push_to_registries:
+    name: Push Docker image to multiple registries
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: docker login
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}   
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
-      run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - name: docker build nodejs
-      run: |
-        docker build . -t jayvirrathi/nodejs:1.0.0
-    - name: docker push
-      run: |
-        docker push jayvirrathi/nodejs:1.0.0
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: jayvirrathi/nodejs:1.0.0
+          tag_with_ref: true
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: jayvirrathi/nodejs-docker-kubernetes/nodejs:1.0.0
+          tag_with_ref: true
