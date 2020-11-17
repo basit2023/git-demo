@@ -25,14 +25,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.TOKEN }}
-
-      - name: Login to Github Packages
-        uses: docker/login-action@v1 
-        with:
-          registry: docker.pkg.github.com
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.TOKEN }}
-      
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -42,8 +34,6 @@ jobs:
           push: true
           tags: |
             jayvirrathi/nodejs:latest
-            jayvirrathi/nodejs:v3.0.0
+            jayvirrathi/nodejs:v4.0.0
             ghcr.io/jayvirrathi/nodejs:latest
-            ghcr.io/jayvirrathi/nodejs:v3.0.0
-            docker.pkg.github.com/jayvirrathi/nodejs-docker-kubernetes/nodejs:latest
-            docker.pkg.github.com/jayvirrathi/nodejs-docker-kubernetes/nodejs:v3.0.0
+            ghcr.io/jayvirrathi/nodejs:v4.0.0
