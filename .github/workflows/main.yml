@@ -34,9 +34,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install kubectl
-        uses: steebchen/kubectl-setup@v1
-        with:
-          version: 'latest'
+        run: |
+          sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+          echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+          sudo apt-get update && sudo apt-get install -y kubectl
 
       - name: Update image tag in deployment file
         run: sed -i "s|jayvirrathi/nodejs:v1|${{ needs.build.outputs.image_tag }}|g" deployment/deployment.yaml
