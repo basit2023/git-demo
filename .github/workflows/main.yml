@@ -45,4 +45,5 @@ jobs:
 
       # Deploy the application
       - name: Deploy application
-        run: kubectl apply -f deployment/deployment.yaml
+        #run: kubectl apply -f deployment/deployment.yaml
+        run : kubectl get nodes
