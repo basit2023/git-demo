@@ -3,10 +3,11 @@ name: CICD Pipeline
 on:
   push:
     branches:
-      - master
+      - main
+  workflow_dispatch:
 
 env:
-  IMAGE_TAG: latest
+  IMAGE_TAG: v1
 
 jobs:
   build:
