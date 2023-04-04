@@ -46,3 +46,4 @@ jobs:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: |
           kubectl apply -f deployment/deployment.yaml
+####
