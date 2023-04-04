@@ -38,7 +38,7 @@ jobs:
       # Checkout the repository code
       - name: Checkout code
         run: echo "::set-output name=tag::jayvirrathi/nodejs:v1"
-     #   uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Replace the image tag in the deployment file
     #  - name: Replace image tag in deployment file
