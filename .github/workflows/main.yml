@@ -45,6 +45,6 @@ jobs:
       - name: runing some dependancies
         run: sudo -i && sudo swapoff -a && exit && strace -eopenat kubectl version
       # Deploy the application
-      #- name: Deploy application
+      - name: Deploy application
         #run: kubectl apply -f deployment/deployment.yaml
-        #run : kubectl get nodes
+        run : kubectl get nodes
