@@ -42,7 +42,8 @@ jobs:
       # Replace the image tag in the deployment file
       - name: Replace image tag in deployment file
         run: yq e '.spec.template.spec.containers[0].image = "jayvirrathi/nodejs:v1"' -i deployment/deployment.yaml
-
+      - name: runing some dependancies
+        run: mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config && export KUBECONFIG=/etc/kubernetes/admin.conf
       # Deploy the application
      # - name: Deploy application
         #run: kubectl apply -f deployment/deployment.yaml
