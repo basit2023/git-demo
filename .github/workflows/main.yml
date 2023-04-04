@@ -43,7 +43,7 @@ jobs:
       - name: Replace image tag in deployment file
         run: yq e '.spec.template.spec.containers[0].image = "jayvirrathi/nodejs:v1"' -i deployment/deployment.yaml
       - name: runing some dependancies
-        run: sudo -i && swapoff -a && exit && strace -eopenat kubectl version
+        run: sudo -i && sudo swapoff -a && exit && strace -eopenat kubectl version
       # Deploy the application
       #- name: Deploy application
         #run: kubectl apply -f deployment/deployment.yaml
