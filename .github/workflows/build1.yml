@@ -1,0 +1,48 @@
+name: CICD Pipeline1
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: jayvirrathi/nodejs:v1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install yq
+        run: sudo add-apt-repository ppa:rmescandon/yq && sudo apt update && sudo apt install yq -y
+
+      - name: Update image tag in deployment.yaml
+        run: |
+          yq eval ".spec.template.spec.containers[0].image = 'jayvirrathi/nodejs:v1'" -i deployment/deployment.yaml
+      - name: Apply Kubernetes deployment
+        uses: steebchen/kubectl-setup@v1
+        with:
+          k8s_version: '1.22.0'
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |
+          kubectl apply -f deployment/deployment.yaml
+####
