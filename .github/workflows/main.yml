@@ -44,5 +44,5 @@ jobs:
         run: yq e '.spec.template.spec.containers[0].image = "jayvirrathi/nodejs:v1"' -i deployment/deployment.yaml
 
       # Deploy the application
-    #  - name: Deploy application
-     #   run: kubectl apply -f deployment/deployment.yaml
+      - name: Deploy application
+        run: kubectl apply -f deployment/deployment.yaml
