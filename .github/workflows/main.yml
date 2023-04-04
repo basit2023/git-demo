@@ -38,11 +38,11 @@ jobs:
         run: |
           yq eval ".spec.template.spec.containers[0].image = 'jayvirrathi/nodejs:v1'" -i deployment/deployment.yaml
       - name: Apply Kubernetes deployment
-        uses: steebchen/kubectl-setup@v1
-        with:
-          k8s_version: '1.22.0'
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        run: |
+       # uses: steebchen/kubectl-setup@v1
+       # with:
+        #  k8s_version: '1.22.0'
+       # env:
+         # KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        #run: |
         #  kubectl apply -f deployment/deployment.yaml
 ####
