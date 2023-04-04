@@ -1,7 +1,9 @@
 name: CICD Pipeline1
 #
 on:
-  workflow_dispatch:
+    workflow_dispatch:
+        branches:
+          - master
 
 jobs:
   build:
