@@ -1,46 +1,48 @@
-name: CICD Pipeline1
-#
-on:
-    workflow_dispatch:
-        branches:
-          - master
+# Define the CI/CD pipeline workflow
+name: CI/CD Pipeline
 
+# Define the events that trigger the workflow
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Define the build job
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v2
 
-
-
-      - name: Build and push Docker image
+      # Build the Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
-          push: true
           tags: jayvirrathi/nodejs:v1
 
+      # Set the image tag as an output
+      - name: Set image tag output
+        id: tag
+        run: echo "::set-output name=tag::jayvirrathi/nodejs:v1"
+
+  # Define the deploy job
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install yq
-        run: sudo add-apt-repository ppa:rmescandon/yq && sudo apt update && sudo apt install yq -y
+      # Replace the image tag in the deployment file
+      - name: Replace image tag in deployment file
+        run: sed -i "s|jayvirrathi/nodejs:latest|jayvirrathi/nodejs:v1|g" deployment/deployment.yaml
 
-      - name: Update image tag in deployment.yaml
-        run: |
-          yq eval ".spec.template.spec.containers[0].image = 'jayvirrathi/nodejs:v1'" -i deployment/deployment.yaml
-      - name: Apply Kubernetes deployment
-        uses: steebchen/kubectl-setup@v1
-        with:
-          k8s_version: '1.22.0'
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        run: |
-          kubectl apply -f deployment/deployment.yaml
-####
+      # Deploy the application
+      - name: Deploy application
+        run: kubectl apply -f deployment/deployment.yaml
