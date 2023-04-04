@@ -41,8 +41,8 @@ jobs:
         uses: actions/checkout@v2
 
       # Replace the image tag in the deployment file
-    #  - name: Replace image tag in deployment file
-     #   run: sed -i "s|jayvirrathi/nodejs:latest|jayvirrathi/nodejs:v1|g" deployment/deployment.yaml
+      - name: Replace image tag in deployment file
+        run: sed -i "s|jayvirrathi/nodejs:latest|jayvirrathi/nodejs:v1|g" deployment/deployment.yaml
 
       # Deploy the application
     #  - name: Deploy application
