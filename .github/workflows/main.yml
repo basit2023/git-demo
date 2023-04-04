@@ -1,10 +1,11 @@
-name: Build and Deploy
+name: CICD Pipeline
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
 
 jobs:
   build:
@@ -13,35 +14,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build Docker image
+
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
-          push: false
-          tags: jayvirrathi/nodejs:v1    
-
-      - name: Set output image tag
-        id: image_tag
-        run: echo "::set-output name=image_tag;jayvirrathi/nodejs:v1" 
+          push: true
+          tags: jayvirrathi/nodejs:v1
 
   deploy:
     needs: build
-    name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install kubectl
+      - name: Install yq
+        run: sudo add-apt-repository ppa:rmescandon/yq && sudo apt update && sudo apt install yq -y
+
+      - name: Update image tag in deployment.yaml
         run: |
-          sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
-          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-          echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-          sudo apt-get update && sudo apt-get install -y kubectl
-
-      - name: Update image tag in deployment file
-        run: sed -i "s|jayvirrathi/nodejs:v1|${{ needs.build.outputs.image_tag }}|g" deployment/deployment.yaml
-
-      - name: Apply deployment file
-        run: yq eval ".spec.template.spec.containers[0].image = 'ghcr.io/${{ github.repository_owner }}/nodejs:${{ env.IMAGE_TAG }}'" -i deployment/deployment.yaml
+          yq eval ".spec.template.spec.containers[0].image = 'jayvirrathi/nodejs:v1'" -i deployment/deployment.yaml
+      - name: Apply Kubernetes deployment
+        uses: steebchen/kubectl-setup@v1
+        with:
+          k8s_version: '1.22.0'
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |
+          kubectl apply -f deployment/deployment.yaml
+####
