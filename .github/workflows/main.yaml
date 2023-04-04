@@ -41,7 +41,7 @@ jobs:
 
       # Replace the image tag in the deployment file
       - name: Replace image tag in deployment file
-        run: yq e '.spec.template.spec.containers[0].image = "jayvirrathi/nodejs:v1"' -i deployment/deployment.yaml
+      #  run: yq e '.spec.template.spec.containers[0].image = "jayvirrathi/nodejs:v1"' -i deployment/deployment.yaml
 
       # Deploy the application
       - name: Deploy application
