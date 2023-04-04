@@ -37,12 +37,13 @@ jobs:
     steps:
       # Checkout the repository code
       - name: Checkout code
-        uses: actions/checkout@v2
+        run: echo "::set-output name=tag::jayvirrathi/nodejs:v1"
+     #   uses: actions/checkout@v2
 
       # Replace the image tag in the deployment file
-      - name: Replace image tag in deployment file
-        run: sed -i "s|jayvirrathi/nodejs:latest|jayvirrathi/nodejs:v1|g" deployment/deployment.yaml
+    #  - name: Replace image tag in deployment file
+     #   run: sed -i "s|jayvirrathi/nodejs:latest|jayvirrathi/nodejs:v1|g" deployment/deployment.yaml
 
       # Deploy the application
-      - name: Deploy application
-        run: kubectl apply -f deployment/deployment.yaml
+    #  - name: Deploy application
+      #  run: kubectl apply -f deployment/deployment.yaml
